@@ -1,0 +1,22 @@
+name: material_you_calculator
+description: Flutter Material You 계산기 앱
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_riverpod: ^2.5.0
+  hive: ^2.2.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  hive_generator: ^2.0.0
+  build_runner: ^2.4.0
+
+flutter:
+  uses-material-design: true
