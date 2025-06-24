@@ -1,8 +1,10 @@
+## 진행률: 11% (1/9 완료)
+
 # Material You Calculator 작업 목록 (안드로이드 앱 프로젝트)
 
 Flutter 기반 안드로이드 앱 개발을 위한 작업 목록입니다. 각 작업은 PR 단위로 진행하며, `architecture.md` 의 요구 사항을 충실히 반영합니다.
 
-1. **프로젝트 초기화 및 CI 구성**
+1. **프로젝트 초기화 및 CI 구성** ✅
    - Flutter 프로젝트 생성 후 `presentation/`, `application/`, `domain/`, `data/` 구조 세팅
    - 필수 패키지(Riverpod, Hive 등) 추가
    - GitHub Actions를 이용한 빌드/테스트 워크플로 작성
