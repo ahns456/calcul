@@ -1,6 +1,6 @@
-# Material You Calculator 작업 목록
+# Material You Calculator 작업 목록 (안드로이드 앱 프로젝트)
 
-각 작업은 PR 단위로 진행하며, `architecture.md` 의 요구 사항을 충실히 반영합니다.
+Flutter 기반 안드로이드 앱 개발을 위한 작업 목록입니다. 각 작업은 PR 단위로 진행하며, `architecture.md` 의 요구 사항을 충실히 반영합니다.
 
 1. **프로젝트 초기화 및 CI 구성**
    - Flutter 프로젝트 생성 후 `presentation/`, `application/`, `domain/`, `data/` 구조 세팅
