@@ -34,7 +34,7 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context);
-    final expression = ref.watch(expressionProvider);
+    final displayExpression = ref.watch(displayExpressionProvider);
     final result = ref.watch(resultProvider);
 
     return Scaffold(
@@ -60,13 +60,38 @@ class HomeScreen extends ConsumerWidget {
       body: Column(
         children: [
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(expression, style: Theme.of(context).textTheme.titleLarge),
-                Text(result, style: Theme.of(context).textTheme.headlineMedium),
-              ],
+            child: Container(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // 수식 표시 영역
+                  Container(
+                    width: double.infinity,
+                    child: Text(
+                      displayExpression.isEmpty ? '0' : displayExpression,
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7),
+                      ),
+                      textAlign: TextAlign.right,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  // 결과 표시 영역
+                  Container(
+                    width: double.infinity,
+                    child: Text(
+                      result.isEmpty ? '' : result,
+                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.right,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           // 키패드 영역 - 스크롤 없이 고정 크기로 설정
@@ -192,7 +217,7 @@ class HomeScreen extends ConsumerWidget {
                     onPressed: () {
                       final exp = ref.read(expressionProvider);
                       final res = ref.read(resultProvider);
-                      if (exp.isNotEmpty && res != 'Err') {
+                      if (exp.isNotEmpty && res.isNotEmpty && res != 'Err') {
                         final record = CalculationRecord(
                           expression: exp,
                           result: res,
