@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'application/providers.dart';
 import 'application/history_provider.dart';
-import 'domain/models/calculation_record.dart';
+import 'data/history_repository.dart';
 import 'l10n/app_localizations.dart';
 import 'presentation/screens/home_screen.dart';
 import 'presentation/screens/history_screen.dart';
