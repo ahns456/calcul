@@ -28,13 +28,11 @@
 - 복잡한 로직에는 주석 추가
 - README.md 파일 업데이트 필요시 알려주세요
 
-# copilot-instructions.md
-
-## GitHub Copilot 사용 지침 (Flutter 프로젝트)
-
-이 파일은 Copilot 및 AI 에이전트가 플러터 개발 환경에서 최적의 성능을 발휘하도록 안내하는 명령어를 정리한 것입니다.
-
----
+## 터미널
+- **중요**: 터미널은 PowerShell을 사용하고 있으니, 반드시 PowerShell 문법에 맞는 명령어를 사용해줘.
+- Linux/Bash 명령어 대신 PowerShell 명령어를 우선 사용해줘.
+- 명령어 연결 시 `&&` 대신 `;` 또는 개별 명령어로 실행해줘.
+- 예시: `command1; command2` 또는 별도 실행
 
 ### 📌 공통 지침
 
