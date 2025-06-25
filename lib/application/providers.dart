@@ -6,7 +6,22 @@ import '../domain/use_cases/calculate.dart';
 final expressionProvider = StateProvider<String>((ref) => '');
 
 /// Holds the current result string.
-final resultProvider = StateProvider<String>((ref) => '0');
+final resultProvider = Provider<String>((ref) {
+  final expression = ref.watch(expressionProvider);
+  if (expression.isEmpty) {
+    return '0';
+  }
+  final calculator = ref.watch(calculateUseCaseProvider);
+  try {
+    final value = calculator.call(expression);
+    if (value.isInfinite || value.isNaN) {
+      return 'Err';
+    }
+    return value.toString();
+  } catch (_) {
+    return 'Err';
+  }
+});
 
 /// App theme mode state.
 final themeModeProvider = StateProvider<ThemeMode>((ref) => ThemeMode.system);

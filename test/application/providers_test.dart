@@ -19,4 +19,15 @@ void main() {
     container.read(themeModeProvider.notifier).state = ThemeMode.dark;
     expect(container.read(themeModeProvider), ThemeMode.dark);
   });
+
+  test('result updates with expression', () {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+
+    container.read(expressionProvider.notifier).state = '1+2';
+    expect(container.read(resultProvider), '3');
+
+    container.read(expressionProvider.notifier).state = '1+';
+    expect(container.read(resultProvider), 'Err');
+  });
 }

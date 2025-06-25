@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../application/providers.dart';
 import '../../application/history_provider.dart';
 import '../../domain/models/calculation_record.dart';
-import '../../domain/use_cases/calculate.dart';
 import '../../l10n/app_localizations.dart';
 import '../widgets/calc_button.dart';
 import 'settings_screen.dart';
@@ -101,21 +100,16 @@ class HomeScreen extends ConsumerWidget {
                   onPressed: () {
                     if (label == 'C') {
                       ref.read(expressionProvider.notifier).state = '';
-                      ref.read(resultProvider.notifier).state = '0';
                     } else if (label == '=') {
-                      try {
-                        final exp = ref.read(expressionProvider);
-                        final calculator = ref.read(calculateUseCaseProvider);
-                        final value = calculator.call(exp);
-                        ref.read(resultProvider.notifier).state = value.toString();
+                      final exp = ref.read(expressionProvider);
+                      final res = ref.read(resultProvider);
+                      if (exp.isNotEmpty && res != 'Err') {
                         final record = CalculationRecord(
                           expression: exp,
-                          result: value.toString(),
+                          result: res,
                           timestamp: DateTime.now(),
                         );
                         ref.read(historyProvider.notifier).add(record);
-                      } catch (_) {
-                        ref.read(resultProvider.notifier).state = 'Err';
                       }
                     } else {
                       _append(ref, label);
