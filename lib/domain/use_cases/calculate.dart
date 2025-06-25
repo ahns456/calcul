@@ -13,13 +13,16 @@ class CalculateUseCase {
   late List<String> _tokens;
   int _index = 0;
 
+  static final RegExp _numReg = RegExp(r'[0-9.]');
+
   List<String> _tokenize(String expr) {
     final tokens = <String>[];
     final buffer = StringBuffer();
     for (var i = 0; i < expr.length; i++) {
-      final ch = expr[i];
-      if (RegExp(r'[0-9.]').hasMatch(ch)) {
-        buffer.write(ch);
+      final code = expr.codeUnitAt(i);
+      final ch = String.fromCharCode(code);
+      if (_numReg.hasMatch(ch)) {
+        buffer.writeCharCode(code);
       } else {
         if (buffer.isNotEmpty) {
           tokens.add(buffer.toString());

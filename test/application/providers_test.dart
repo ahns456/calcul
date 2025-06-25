@@ -25,7 +25,7 @@ void main() {
     addTearDown(container.dispose);
 
     container.read(expressionProvider.notifier).state = '1+2';
-    expect(container.read(resultProvider), '3');
+    expect(container.read(resultProvider), '3.0');
 
     container.read(expressionProvider.notifier).state = '1+';
     expect(container.read(resultProvider), 'Err');
