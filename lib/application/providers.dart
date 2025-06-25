@@ -56,13 +56,10 @@ bool _isIncompleteExpression(String expression) {
 }
 
 /// App theme mode state.
-final themeModeProvider = StateProvider<ThemeMode>((ref) => ThemeMode.system);
+final themeModeProvider = StateProvider<ThemeMode>((ref) => ThemeMode.dark);
 
 /// Haptic feedback toggle.
 final hapticProvider = StateProvider<bool>((ref) => true);
-
-/// Sound feedback toggle.
-final soundProvider = StateProvider<bool>((ref) => true);
 
 /// Provides the calculation use case.
 final calculateUseCaseProvider = Provider<CalculateUseCase>(

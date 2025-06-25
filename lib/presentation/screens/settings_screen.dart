@@ -11,7 +11,6 @@ class SettingsScreen extends ConsumerWidget {
     final l10n = AppLocalizations.of(context);
     final darkMode = ref.watch(themeModeProvider) == ThemeMode.dark;
     final haptic = ref.watch(hapticProvider);
-    final sound = ref.watch(soundProvider);
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.settings)),
@@ -30,13 +29,6 @@ class SettingsScreen extends ConsumerWidget {
             value: haptic,
             onChanged: (value) {
               ref.read(hapticProvider.notifier).state = value;
-            },
-          ),
-          SwitchListTile(
-            title: Text(l10n.sound),
-            value: sound,
-            onChanged: (value) {
-              ref.read(soundProvider.notifier).state = value;
             },
           ),
         ],
