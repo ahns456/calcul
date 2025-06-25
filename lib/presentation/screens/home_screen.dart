@@ -4,6 +4,7 @@ import '../../application/providers.dart';
 import '../../l10n/app_localizations.dart';
 import '../widgets/calc_button.dart';
 import 'settings_screen.dart';
+import 'history_screen.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -23,6 +24,13 @@ class HomeScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text(l10n.appTitle),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.history),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const HistoryScreen()),
+            ),
+          ),
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () => Navigator.push(
@@ -51,7 +59,7 @@ class HomeScreen extends ConsumerWidget {
               for (final label in ['7','8','9','/','4','5','6','*','1','2','3','-','0','=','C','+'])
                 CalcButton(
                   label: label,
-                  onPressed: () {
+                  onPressed: () async {
                     if (label == 'C') {
                       ref.read(expressionProvider.notifier).state = '';
                       ref.read(resultProvider.notifier).state = '0';
@@ -60,6 +68,9 @@ class HomeScreen extends ConsumerWidget {
                         final exp = ref.read(expressionProvider);
                         final value = _compute(exp);
                         ref.read(resultProvider.notifier).state = value.toString();
+                        await ref
+                            .read(historyListProvider.notifier)
+                            .add(exp, value.toString());
                       } catch (_) {
                         ref.read(resultProvider.notifier).state = 'Err';
                       }

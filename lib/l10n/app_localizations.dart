@@ -12,6 +12,7 @@ class AppLocalizations {
       'darkMode': 'Dark Mode',
       'hapticFeedback': 'Haptic Feedback',
       'sound': 'Sound',
+      'history': 'History',
     },
     'ko': {
       'appTitle': '머티리얼 유 계산기',
@@ -19,6 +20,7 @@ class AppLocalizations {
       'darkMode': '다크 모드',
       'hapticFeedback': '진동 피드백',
       'sound': '사운드',
+      'history': '기록',
     },
   };
 
@@ -28,6 +30,7 @@ class AppLocalizations {
   String get hapticFeedback =>
       _localizedStrings[locale.languageCode]!['hapticFeedback']!;
   String get sound => _localizedStrings[locale.languageCode]!['sound']!;
+  String get history => _localizedStrings[locale.languageCode]!['history']!;
 
   static const LocalizationsDelegate<AppLocalizations> delegate =
       _AppLocalizationsDelegate();

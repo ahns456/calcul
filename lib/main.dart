@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import "package:flutter_localizations/flutter_localizations.dart";
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'l10n/app_localizations.dart';
 import 'application/providers.dart';
 import 'presentation/screens/home_screen.dart';
+import 'domain/models/history_entry.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  Hive.registerAdapter(HistoryEntryAdapter());
+  await Hive.openBox<HistoryEntry>('history');
   runApp(const ProviderScope(child: MyApp()));
 }
 
