@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../application/providers.dart';
+import '../../domain/use_cases/calculate.dart';
 import '../../l10n/app_localizations.dart';
 import '../widgets/calc_button.dart';
 import 'settings_screen.dart';
@@ -9,7 +10,23 @@ class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   void _append(WidgetRef ref, String value) {
-    final expression = ref.read(expressionProvider);
+    var expression = ref.read(expressionProvider);
+    if (value == '.') {
+      final match =
+          RegExp(r'(\d+\.\d*|\d*\.\d+|\d+)\$').firstMatch(expression);
+      if (match != null && match.group(0)!.contains('.')) {
+        return;
+      }
+    }
+    if (value == '±') {
+      if (expression.isEmpty || expression.endsWith(RegExp(r'[+\-*/(]'))) {
+        expression += '-';
+      } else {
+        expression = '-($expression)';
+      }
+      ref.read(expressionProvider.notifier).state = expression;
+      return;
+    }
     ref.read(expressionProvider.notifier).state = expression + value;
   }
 
@@ -48,7 +65,28 @@ class HomeScreen extends ConsumerWidget {
             crossAxisCount: 4,
             shrinkWrap: true,
             children: [
-              for (final label in ['7','8','9','/','4','5','6','*','1','2','3','-','0','=','C','+'])
+              for (final label in [
+                '7',
+                '8',
+                '9',
+                '/',
+                '4',
+                '5',
+                '6',
+                '*',
+                '1',
+                '2',
+                '3',
+                '-',
+                '0',
+                '.',
+                '±',
+                '+',
+                '(',
+                ')',
+                '=',
+                'C'
+              ])
                 CalcButton(
                   label: label,
                   onPressed: () {
@@ -58,7 +96,8 @@ class HomeScreen extends ConsumerWidget {
                     } else if (label == '=') {
                       try {
                         final exp = ref.read(expressionProvider);
-                        final value = _compute(exp);
+                        final calculator = ref.read(calculateUseCaseProvider);
+                        final value = calculator.call(exp);
                         ref.read(resultProvider.notifier).state = value.toString();
                       } catch (_) {
                         ref.read(resultProvider.notifier).state = 'Err';
@@ -76,32 +115,3 @@ class HomeScreen extends ConsumerWidget {
   }
 }
 
-double _compute(String expression) {
-  // Very naive evaluation (for demo only).
-  try {
-    final sanitized = expression.replaceAll('*', ' * ').replaceAll('/', ' / ');
-    final tokens = sanitized.split(' ');
-    double result = double.parse(tokens.first);
-    for (var i = 1; i < tokens.length; i += 2) {
-      final op = tokens[i];
-      final value = double.parse(tokens[i + 1]);
-      switch (op) {
-        case '+':
-          result += value;
-          break;
-        case '-':
-          result -= value;
-          break;
-        case '*':
-          result *= value;
-          break;
-        case '/':
-          result /= value;
-          break;
-      }
-    }
-    return result;
-  } catch (e) {
-    throw Exception('Invalid expression');
-  }
-}
