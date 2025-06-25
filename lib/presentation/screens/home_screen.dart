@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../application/providers.dart';
+import '../../application/history_provider.dart';
+import '../../domain/models/calculation_record.dart';
 import '../../domain/use_cases/calculate.dart';
 import '../../l10n/app_localizations.dart';
 import '../widgets/calc_button.dart';
@@ -19,7 +21,7 @@ class HomeScreen extends ConsumerWidget {
       }
     }
     if (value == '±') {
-      if (expression.isEmpty || expression.endsWith(RegExp(r'[+\-*/(]'))) {
+      if (expression.isEmpty || RegExp(r'[+\-*/(]$').hasMatch(expression)) {
         expression += '-';
       } else {
         expression = '-($expression)';
@@ -41,6 +43,13 @@ class HomeScreen extends ConsumerWidget {
         title: Text(l10n.appTitle),
         actions: [
           IconButton(
+            icon: const Icon(Icons.history),
+            onPressed: () async {
+              await ref.read(historyProvider.notifier).load();
+              Navigator.pushNamed(context, '/history');
+            },
+          ),
+          IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () => Navigator.push(
               context,
@@ -56,15 +65,15 @@ class HomeScreen extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(expression, style: Theme.of(context).textTheme.headline5),
-                Text(result, style: Theme.of(context).textTheme.headline4),
+                Text(expression, style: Theme.of(context).textTheme.titleLarge),
+                Text(result, style: Theme.of(context).textTheme.headlineMedium),
               ],
             ),
           ),
-          GridView.count(
-            crossAxisCount: 4,
-            shrinkWrap: true,
-            children: [
+          Expanded(
+            child: GridView.count(
+              crossAxisCount: 4,
+              children: [
               for (final label in [
                 '7',
                 '8',
@@ -99,6 +108,12 @@ class HomeScreen extends ConsumerWidget {
                         final calculator = ref.read(calculateUseCaseProvider);
                         final value = calculator.call(exp);
                         ref.read(resultProvider.notifier).state = value.toString();
+                        final record = CalculationRecord(
+                          expression: exp,
+                          result: value.toString(),
+                          timestamp: DateTime.now(),
+                        );
+                        ref.read(historyProvider.notifier).add(record);
                       } catch (_) {
                         ref.read(resultProvider.notifier).state = 'Err';
                       }
@@ -107,7 +122,8 @@ class HomeScreen extends ConsumerWidget {
                     }
                   },
                 ),
-            ],
+              ],
+            ),
           ),
         ],
       ),

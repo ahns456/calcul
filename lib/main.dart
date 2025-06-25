@@ -1,12 +1,25 @@
 import 'package:flutter/material.dart';
 import "package:flutter_localizations/flutter_localizations.dart";
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'l10n/app_localizations.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'application/providers.dart';
+import 'application/history_provider.dart';
+import 'domain/models/calculation_record.dart';
+import 'l10n/app_localizations.dart';
 import 'presentation/screens/home_screen.dart';
+import 'presentation/screens/history_screen.dart';
 
-void main() {
-  runApp(const ProviderScope(child: MyApp()));
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  final repo = HistoryRepository();
+  await repo.init();
+  runApp(
+    ProviderScope(
+      overrides: [historyRepositoryProvider.overrideWithValue(repo)],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends ConsumerWidget {
@@ -26,7 +39,11 @@ class MyApp extends ConsumerWidget {
       themeMode: themeMode,
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
-      home: const HomeScreen(),
+      routes: {
+        '/': (_) => const HomeScreen(),
+        '/history': (_) => const HistoryScreen(),
+      },
+      initialRoute: '/',
     );
   }
 }
