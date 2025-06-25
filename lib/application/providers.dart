@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../domain/use_cases/calculate.dart';
 
 /// Holds the current math expression.
 final expressionProvider = StateProvider<String>((ref) => '');
@@ -15,3 +16,8 @@ final hapticProvider = StateProvider<bool>((ref) => true);
 
 /// Sound feedback toggle.
 final soundProvider = StateProvider<bool>((ref) => true);
+
+/// Provides the calculation use case.
+final calculateUseCaseProvider = Provider<CalculateUseCase>(
+  (ref) => CalculateUseCase(),
+);
