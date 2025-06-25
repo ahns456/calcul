@@ -23,4 +23,27 @@ void main() {
 
     expect(find.byType(CalcButton), findsWidgets);
   });
+
+  testWidgets('shows real time result', (tester) async {
+    await tester.pumpWidget(const ProviderScope(
+      child: MaterialApp(
+        home: HomeScreen(),
+        localizationsDelegates: [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: [Locale('en')],
+      ),
+    ));
+
+    await tester.tap(find.widgetWithText(CalcButton, '1'));
+    await tester.pump();
+    await tester.tap(find.widgetWithText(CalcButton, '+'));
+    await tester.pump();
+    await tester.tap(find.widgetWithText(CalcButton, '2'));
+    await tester.pump();
+
+    expect(find.text('3'), findsOneWidget);
+  });
 }
