@@ -69,64 +69,142 @@ class HomeScreen extends ConsumerWidget {
               ],
             ),
           ),
-          // 키패드 영역 크기 제한으로 스크롤 방지
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.5, // 화면 높이의 50%로 제한
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: GridView.count(
-                crossAxisCount: 4,
-                crossAxisSpacing: 8.0,
-                mainAxisSpacing: 8.0,
-                childAspectRatio: 1.2, // 버튼 비율 조정 (가로가 세로보다 약간 길게)
+          // 키패드 영역 - 스크롤 없이 고정 크기로 설정
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: GridView.count(
+              shrinkWrap: true, // 컨텐츠 크기에 맞게 축소
+              physics: const NeverScrollableScrollPhysics(), // 스크롤 비활성화
+              crossAxisCount: 4,
+              crossAxisSpacing: 12.0,
+              mainAxisSpacing: 12.0,
+              childAspectRatio: 1.1, // 버튼 비율 조정 (약간 세로가 짧게)
                 children: [
-                for (final label in [
-                  '7',
-                  '8',
-                  '9',
-                  '/',
-                  '4',
-                  '5',
-                  '6',
-                  '*',
-                  '1',
-                  '2',
-                  '3',
-                  '-',
-                  '0',
-                  '.',
-                  '±',
-                  '+',
-                  '(',
-                  ')',
-                  '=',
-                  'C'
-                ])
+                  // 첫 번째 줄: 기능 버튼들
                   CalcButton(
-                    label: label,
+                    label: 'C',
+                    buttonType: ButtonType.function,
                     onPressed: () {
-                      if (label == 'C') {
-                        ref.read(expressionProvider.notifier).state = '';
-                      } else if (label == '=') {
-                        final exp = ref.read(expressionProvider);
-                        final res = ref.read(resultProvider);
-                        if (exp.isNotEmpty && res != 'Err') {
-                          final record = CalculationRecord(
-                            expression: exp,
-                            result: res,
-                            timestamp: DateTime.now(),
-                          );
-                          ref.read(historyProvider.notifier).add(record);
-                        }
-                      } else {
-                        _append(ref, label);
+                      ref.read(expressionProvider.notifier).state = '';
+                    },
+                  ),
+                  CalcButton(
+                    label: '()',
+                    buttonType: ButtonType.function,
+                    onPressed: () => _append(ref, '('),
+                  ),
+                  CalcButton(
+                    label: '%',
+                    buttonType: ButtonType.function,
+                    onPressed: () => _append(ref, '%'),
+                  ),
+                  CalcButton(
+                    label: '÷',
+                    buttonType: ButtonType.operator,
+                    onPressed: () => _append(ref, '/'),
+                  ),
+                  
+                  // 두 번째 줄: 7, 8, 9, ×
+                  CalcButton(
+                    label: '7',
+                    buttonType: ButtonType.number,
+                    onPressed: () => _append(ref, '7'),
+                  ),
+                  CalcButton(
+                    label: '8',
+                    buttonType: ButtonType.number,
+                    onPressed: () => _append(ref, '8'),
+                  ),
+                  CalcButton(
+                    label: '9',
+                    buttonType: ButtonType.number,
+                    onPressed: () => _append(ref, '9'),
+                  ),
+                  CalcButton(
+                    label: '×',
+                    buttonType: ButtonType.operator,
+                    onPressed: () => _append(ref, '*'),
+                  ),
+                  
+                  // 세 번째 줄: 4, 5, 6, -
+                  CalcButton(
+                    label: '4',
+                    buttonType: ButtonType.number,
+                    onPressed: () => _append(ref, '4'),
+                  ),
+                  CalcButton(
+                    label: '5',
+                    buttonType: ButtonType.number,
+                    onPressed: () => _append(ref, '5'),
+                  ),
+                  CalcButton(
+                    label: '6',
+                    buttonType: ButtonType.number,
+                    onPressed: () => _append(ref, '6'),
+                  ),
+                  CalcButton(
+                    label: '−',
+                    buttonType: ButtonType.operator,
+                    onPressed: () => _append(ref, '-'),
+                  ),
+                  
+                  // 네 번째 줄: 1, 2, 3, +
+                  CalcButton(
+                    label: '1',
+                    buttonType: ButtonType.number,
+                    onPressed: () => _append(ref, '1'),
+                  ),
+                  CalcButton(
+                    label: '2',
+                    buttonType: ButtonType.number,
+                    onPressed: () => _append(ref, '2'),
+                  ),
+                  CalcButton(
+                    label: '3',
+                    buttonType: ButtonType.number,
+                    onPressed: () => _append(ref, '3'),
+                  ),
+                  CalcButton(
+                    label: '+',
+                    buttonType: ButtonType.operator,
+                    onPressed: () => _append(ref, '+'),
+                  ),
+                  
+                  // 다섯 번째 줄: ±, 0, ., =
+                  CalcButton(
+                    label: '±',
+                    buttonType: ButtonType.number,
+                    onPressed: () => _append(ref, '±'),
+                  ),
+                  CalcButton(
+                    label: '0',
+                    buttonType: ButtonType.number,
+                    onPressed: () => _append(ref, '0'),
+                  ),
+                  CalcButton(
+                    label: '.',
+                    buttonType: ButtonType.number,
+                    onPressed: () => _append(ref, '.'),
+                  ),
+                  CalcButton(
+                    label: '=',
+                    buttonType: ButtonType.equals,
+                    onPressed: () {
+                      final exp = ref.read(expressionProvider);
+                      final res = ref.read(resultProvider);
+                      if (exp.isNotEmpty && res != 'Err') {
+                        final record = CalculationRecord(
+                          expression: exp,
+                          result: res,
+                          timestamp: DateTime.now(),
+                        );
+                        ref.read(historyProvider.notifier).add(record);
                       }
                     },
                   ),
                 ],
               ),
             ),
-          ),
         ],
       ),
     );
